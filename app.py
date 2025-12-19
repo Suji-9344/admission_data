@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from sklearn.datasets import load_iris
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, classification_report
@@ -12,34 +13,16 @@ st.title("🌸 Iris Flower Prediction App")
 st.write("Decision Tree Classifier")
 
 # ---------------------------------
-# DATASET (EMBEDDED IRIS DATA)
+# LOAD IRIS DATASET
 # ---------------------------------
-data = {
-    "SepalLengthCm": [
-        5.1, 4.9, 4.7, 4.6, 5.0, 5.4, 4.6, 5.0, 4.4, 4.9,
-        5.4, 4.8, 4.8, 4.3, 5.8
-    ],
-    "SepalWidthCm": [
-        3.5, 3.0, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1,
-        3.7, 3.4, 3.0, 3.0, 4.0
-    ],
-    "PetalLengthCm": [
-        1.4, 1.4, 1.3, 1.5, 1.4, 1.7, 1.4, 1.5, 1.4, 1.5,
-        1.5, 1.6, 1.4, 1.1, 1.2
-    ],
-    "PetalWidthCm": [
-        0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2, 0.2, 0.1,
-        0.2, 0.2, 0.1, 0.1, 0.2
-    ],
-    "Species": [
-        "Iris-setosa", "Iris-setosa", "Iris-setosa", "Iris-setosa",
-        "Iris-setosa", "Iris-setosa", "Iris-setosa", "Iris-setosa",
-        "Iris-setosa", "Iris-setosa", "Iris-setosa", "Iris-setosa",
-        "Iris-setosa", "Iris-setosa", "Iris-setosa"
-    ]
-}
-
-df = pd.DataFrame(data)
+iris = load_iris()
+df = pd.DataFrame(iris.data, columns=iris.feature_names)
+df["Species"] = iris.target
+df["Species"] = df["Species"].map({
+    0: "Iris-setosa",
+    1: "Iris-versicolor",
+    2: "Iris-virginica"
+})
 
 # ---------------------------------
 # SHOW DATASET
@@ -50,7 +33,7 @@ with st.expander("📊 View Dataset"):
 # ---------------------------------
 # FEATURES & TARGET
 # ---------------------------------
-X = df.drop("Species", axis=1)
+X = df.iloc[:, :-1]
 y = df["Species"]
 
 # ---------------------------------
